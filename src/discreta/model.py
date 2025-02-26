@@ -1,3 +1,5 @@
+from itertools import product
+
 class Model:
     """
     Classe para modelar e resolver problemas de Operations Research (Pesquisa Operacional) com variáveis inteiras.
@@ -113,21 +115,22 @@ class Model:
             # Retorna {"x1": 4, "x2": 1}
             ```
         """
-        gradient = {}
-        for var in self.variables:
-            original_value = self.variables[var]
+        gradient_r = self.variables.copy()
+        possible_changes = list(product([-1, 0, 1], repeat=len(self.variables)))
+ 
+        for change in possible_changes:
+            gradient = gradient_r.copy()
+            pass_result = self.evaluate_expression(self.objective, gradient_r)
+            for i, var in enumerate(self.variables):
+                new_value = gradient[var] + change[i]
+                new_value = max(0, new_value)
+                gradient[var] = new_value
+            before_result = self.evaluate_expression(self.objective, gradient)
+            if all(self.evaluate_expression(c, gradient) for c in self.constraints):
+                if before_result > pass_result:
+                    gradient_r = gradient.copy()
 
-            self.variables[var] = original_value + 1
-            f_plus_1 = self.evaluate_expression(self.objective, self.variables)
-
-            self.variables[var] = max(0, original_value - 1)
-            f_minus_1 = self.evaluate_expression(self.objective, self.variables)
-
-            self.variables[var] = original_value
-
-            gradient[var] = f_plus_1 - f_minus_1
-
-        return gradient
+        return gradient_r
 
     def solve(self, learning_rate=1, max_iterations=1000, min_iterations=3):
         """
@@ -152,29 +155,12 @@ class Model:
         iteration = 0
         while iteration < max_iterations:
             iteration += 1
-            gradient = self.compute_discrete_gradient()
-            updated = False  
+            new_variables = self.compute_discrete_gradient()
 
-            for var in self.variables:
-                if gradient[var] > 0:
-                    new_value = self.variables[var] + learning_rate
-                elif gradient[var] < 0:
-                    new_value = self.variables[var] - learning_rate
-                else:
-                    continue
-
-                new_value = max(0, new_value)
-
-                temp_variables = self.variables.copy()
-                temp_variables[var] = new_value
-
-                if all(self.evaluate_expression(c, temp_variables) for c in self.constraints):
-                    if self.variables[var] != new_value:
-                        self.variables[var] = new_value
-                        updated = True
-
-            if not updated and iteration >= min_iterations:
+            if self.variables == new_variables and iteration >= min_iterations:
                 break
+
+            self.variables = new_variables
 
         print('\nSolução encontrada para:', self.name)
         print(f'Iterações realizadas: {iteration}')
