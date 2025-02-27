@@ -58,7 +58,7 @@ model.add_constraint("9*x1 + x2 + 2*x3 <= 18")
 model.solve()
 ```
 
-Ao executar esse código, o solver encontrará a **melhor solução inteira** para o problema.
+Ao executar esse código, o solver encontrará a **melhor solução inteira** para o problema no menor número de interações possível.
 
 ---
 
