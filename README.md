@@ -1,5 +1,7 @@
 # 🔢 Solver de Otimização Inteira com Branch and Bound
 
+[![Documentation Status](https://readthedocs.org/projects/solver/badge/?version=latest)](https://solver.readthedocs.io/pt-br/latest/?badge=latest)
+
 Durante as aulas de Operation Research decidi implementar as soluções das questões apresentadas através de algoritmos em Python e apartir desta ideia que surge este projeto, que implementa um **Solver de Otimização Inteira** utilizando uma abordagem baseada em **Gradiente Discreto e Branch and Bound**. Ele permite a **maximização** de uma função objetivo sujeita a **restrições lineares**, considerando apenas **variáveis inteiras**.
 
 O objetivo no futuro é evoluir esta solução para uma **biblioteca Python robusta**, que possa ser utilizada de forma modular em projetos de otimização, como para funções contínuas e mais complexas.
